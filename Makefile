@@ -1,7 +1,7 @@
 CXX=g++
 XXFLAGS=-Wall -MMD
 EXEC=main
-OBJECTS=main.o randmath.o vector.o
+OBJECTS=main.o noiselayer.o randmath.o
 DEPENDS=${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}

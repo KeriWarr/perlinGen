@@ -14,6 +14,9 @@ class randMath {
 
 		// generates an integer in between bot and top, inclusive
 		static int getRand(const int bot, const int top);
+		
+		// generates a float in between bot and top, inclusive
+		static float getRand(const float bot, const float top);
 	
 };
 

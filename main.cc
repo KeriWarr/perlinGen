@@ -1,16 +1,14 @@
 #include "noiselayer.h"
 #include <iostream>
 
-const int DETAIL_LEVEL_INVERSE = 20; // 8+
+const int DETAIL_LEVEL_INVERSE = 60; // 8+
 
 
 int main() {
 
-	int dim = 213; // dim >= DETAIL_LEVEL_INVERSE + 2
-	int height = 58;
-	int width = dim;
+	int dim = 600; // dim >= DETAIL_LEVEL_INVERSE + 2
 
-	NoiseLayer *grid = new NoiseLayer(height,width,false);
+	NoiseLayer *grid = new NoiseLayer(dim,dim,false);
 	
 	dim += DETAIL_LEVEL_INVERSE-2;
 	for(int i = dim/DETAIL_LEVEL_INVERSE, weight = 2; i <= dim/2; i *= 2, weight *= 2) {
@@ -25,7 +23,7 @@ int main() {
 	
 	}
 
-	grid->print();
+	grid->printHTMLTable();
 	delete grid;
 
 }

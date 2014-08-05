@@ -5,32 +5,50 @@
 
 class NoiseLayer {
 
-		int **layer;
+		// noise data goes here
+		float **layer;
 		
+		// array size
 		int height, width;
 		
 	public:
 	
+		// constructor
 		NoiseLayer(int height, int width, bool fillWithRand);
 		
+		// destructor
 		~NoiseLayer();
 		
-		int **getLayer() const;
+		// returns layer
+		float **getLayer() const;
 		
+		// returns height
 		int getHeight() const;
 		
+		// returns width
 		int getWidth() const;
 				
+		// prints a visual display of the state of layer
 		void print();	
 		
+		// outputs a generated HTML file with coloured table cells 
+		//  corresponding to data points in layer
+		void printHTMLTable();
+		
+		// adds the values from nl onto layer
 		void addFrom(NoiseLayer *nl);
 		
-		// deletes nl
+		// deletes nl and calls addFrom
 		void addOn(NoiseLayer *nl);
 		
+		// multiplies all the values in layer by factor
 		void scale(float factor);
 		
-		// newHeight & newWidth must be >= this->height, this->width respectively
+		// expands layer to size (newHeight,newWidth) and fills 
+		//  intermediate positions with data interpolated from nearby 
+		//  positions
+		// newHeight & newWidth must be >= this->height, this->width 
+		//  respectively
 		void interpolate(int newHeight, int newWidth);
 
 };

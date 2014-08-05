@@ -2,18 +2,16 @@
 
 NoiseLayer::NoiseLayer(int height, int width, bool fillWithRand) : height(height), width(width) {
 	
-	this->layer = new int*[height];
-	
-	if(fillWithRand) randMath::seedRand();
+	this->layer = new float*[height];
 
 	for(int i = 0; i < height; ++i) {
 		
-		this->layer[i] = new int[width];
+		this->layer[i] = new float[width];
 		
 		for(int j = 0; j < width; ++j) {
 			
-			if(fillWithRand) this->layer[i][j] = randMath::getRand(0,99);
-			else this->layer[i][j] = 0;
+			if(fillWithRand) this->layer[i][j] = randMath::getRand((float)0.0,(float)99.9);
+			else this->layer[i][j] = 0.0;
 			
 		}
 	}
@@ -34,7 +32,7 @@ NoiseLayer::~NoiseLayer() {
 	
 }
 
-int **NoiseLayer::getLayer() const {
+float **NoiseLayer::getLayer() const {
 	
 	return this->layer;
 	
@@ -71,6 +69,35 @@ void NoiseLayer::print() {
 		std::cout << std::endl;
 		
 	}	
+	
+}
+
+void NoiseLayer::printHTMLTable() {
+	
+	static bool first = true;
+	
+	if(first) {
+		std::cout << "<head><style>table{border-spacing:0;}td{width:2px;height:2px;}</style></head>";
+		first = false;
+	}
+	
+	std::cout << "<table>";
+	
+	for(int i = 0; i < this->height; ++i) {
+		
+		std::cout << "<tr>";
+		
+		for(int j = 0; j < this->width; ++j) {
+			
+			std::cout << "<td style=\"background-color:rgb(" << (int)(this->layer[i][j]*2.55) << "," << (int)(this->layer[i][j]*2.55) << "," << (int)(this->layer[i][j]*2.55) << ");\"></td>";
+			
+		}
+		
+	std::cout << "</tr>";
+	
+	}
+	
+	std::cout << "</table>" << std::endl;
 	
 }
 
@@ -117,11 +144,11 @@ void NoiseLayer::interpolate(int newHeight, int newWidth) {
 	int fullHeight = vertiGap*(this->height-1) + 1;
 	int fullWidth = horizGap*(this->width-1) + 1;
 	
-	int **newLayer = new int*[fullHeight];
+	float **newLayer = new float*[fullHeight];
 	
 	for(int i = 0; i < fullHeight; ++i) {
 		
-		newLayer[i] = new int[fullWidth];	
+		newLayer[i] = new float[fullWidth];	
 		
 	}
 	
@@ -149,7 +176,7 @@ void NoiseLayer::interpolate(int newHeight, int newWidth) {
 				float cs = (cos(((float)(j%horizGap))/((float)horizGap)*3.14159)+1.0)/2.0;
 				if(prev < after) cs = 1.0 - cs;
 				
-				newLayer[i*vertiGap][j] = (int)((cs*((float)abs(prev-after)))+(prev < after ? prev : after));
+				newLayer[i*vertiGap][j] = (cs*((float)abs(prev-after)))+(float)(prev < after ? prev : after);
 				
 			}
 			
@@ -171,7 +198,7 @@ void NoiseLayer::interpolate(int newHeight, int newWidth) {
 				float cs = (cos(((float)(i%vertiGap))/((float)vertiGap)*3.14159)+1.0)/2.0;
 				if(above < below) cs = 1.0 - cs;
 				
-				newLayer[i][j] = (int)(((cs)*((float)abs(above-below)))+(above < below ? above : below));
+				newLayer[i][j] = ((cs)*((float)abs(above-below)))+(float)(above < below ? above : below);
 				
 			}
 			
@@ -180,11 +207,11 @@ void NoiseLayer::interpolate(int newHeight, int newWidth) {
 	}	
 	
 	
-	int **sizedLayer = new int*[newHeight];
+	float **sizedLayer = new float*[newHeight];
 
 	for(int i = 0; i < newHeight; ++i) {
 		
-		sizedLayer[i] = new int[newWidth];
+		sizedLayer[i] = new float[newWidth];
 		
 		for(int j = 0; j < newWidth; ++j) {
 			

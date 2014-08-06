@@ -1,6 +1,8 @@
 #ifndef __NOISELAYER_H__
 #define __NOISELAYER_H__
 #include "randmath.h"
+#include "vector.h"
+#include <vector>
 #include <iostream>
 
 class NoiseLayer {
@@ -50,6 +52,9 @@ class NoiseLayer {
 		// newHeight & newWidth must be >= this->height, this->width 
 		//  respectively
 		void interpolate(int newHeight, int newWidth);
+
+		// adds a 'river' from a mountain to a body fo water
+		void addRiver();
 
 };
 

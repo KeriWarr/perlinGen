@@ -56,7 +56,8 @@ void NoiseLayer::print() {
 		
 		for(int j = 0; j < this->width; ++j) {
 			
-			if(this->layer[i][j] <= 20) std::cout << " ";
+			if(this->layer[i][j] == -1.0) std::cout << "~";
+			else if(this->layer[i][j] <= 20) std::cout << " ";
 			else if(this->layer[i][j] <= 30) std::cout << ".";
 			else if(this->layer[i][j] <= 40) std::cout << "-";
 			else if(this->layer[i][j] <= 50) std::cout << "\"";
@@ -246,3 +247,116 @@ void NoiseLayer::interpolate(int newHeight, int newWidth) {
 	this->width = newWidth;
 	
 }
+
+void NoiseLayer::addRiver() {
+	
+	int X = 0, Y = 0;
+	int attempts = 0;
+	
+	while(this->layer[X = randMath::getRand(0,this->height-1)][Y = randMath::getRand(0,this->width-1)] <= 70) {
+		
+		attempts++;
+		if(attempts > 100) return;
+		
+	}
+	
+	std::cout << X << "," << Y <<  std::endl;
+	
+	std::vector<Vector> river;
+	river.push_back(Vector(X,Y));
+	
+	int prevX = X; 
+	int prevY = Y;
+	
+	while(X > 0 && X < this->height && Y > 0 && Y < this->width && this->layer[X][Y] > 30) {
+		
+		int nextX = X;
+		int nextY = Y;
+		
+		std::cout << X << "," << Y << ": " << this->layer[X][Y] << std::endl;
+		
+		for(int i = X-1; i <= X+1; i++) {
+			
+			for(int j = Y-1; j <= Y+1; j++) {
+				if(abs(prevX-i) + abs(prevY-j)) std::cout << "  " << i << "," << j << ": " << this->layer[i][j] << std::endl;
+				if((abs(prevX-i) + abs(prevY-j)) > 1 && this->layer[i][j] < this->layer[nextX][nextY]) {
+					
+					nextX = i; nextY = j;
+					
+				}
+				
+			}
+			
+		}
+		
+		if(nextX == X && nextY == Y) {
+			
+			for(int i = X-2; i <= X+2; i++) {
+				
+				for(int j = Y-2; j <= Y+2; j++) {	
+					
+					if(abs(prevX-i) == 2 || abs(prevY-j) == 2 && this->layer[i][j] < this->layer[nextX][nextY]) {
+						
+						nextX = i; nextY = j;
+						
+					}		
+					
+				}
+				
+			}
+			
+		}
+		
+		if(nextX == X && nextY == Y) break;
+		
+		
+		else {
+			
+			prevX = X;
+			prevY = Y;
+			X = nextX;
+			Y = nextY;
+			river.push_back(Vector(X,Y));
+			
+		}
+			
+		
+	}
+	
+	for(std::vector<Vector>::iterator t = river.begin(); t != river.end(); t++) {
+				
+		for(int i = t->getX()-1; i <= t->getX()+1; i++) {
+			
+			for(int j = t->getY()-1; j <= t->getY()+1; j++) {
+				
+				if((abs(i-t->getX()) + abs(j-t->getY())) <= 1) this->layer[i][j] = -1.0;
+		
+			}
+			
+		}
+		
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

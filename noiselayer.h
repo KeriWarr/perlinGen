@@ -4,6 +4,7 @@
 #include "vector.h"
 #include <vector>
 #include <iostream>
+#include <cmath>
 
 class NoiseLayer {
 
@@ -32,6 +33,9 @@ class NoiseLayer {
 				
 		// prints a visual display of the state of layer
 		void print();	
+
+		// prints a ditribution of the values in layer
+		void printStats();
 		
 		// outputs a generated HTML file with coloured table cells 
 		//  corresponding to data points in layer
@@ -55,6 +59,11 @@ class NoiseLayer {
 
 		// adds a 'river' from a mountain to a body fo water
 		void addRiver();
+
+		// modulates the values in layer according to their distance from a pair of foci near the center of the grid
+		//  this results in most of the values near the edges of the grid being 0 or close to 0, whereas values
+		//  near the center can remain higher
+		void modulateEllipse();
 
 };
 

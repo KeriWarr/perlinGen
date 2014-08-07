@@ -1,12 +1,12 @@
 #include "noiselayer.h"
 #include <iostream>
 
-const int DETAIL_LEVEL_INVERSE = 20; // 8+
+const int DETAIL_LEVEL_INVERSE = 30; // 8+
 
 
 int main() {
 
-	int dim = 100; // dim >= DETAIL_LEVEL_INVERSE + 2
+	int dim = 300; // dim >= DETAIL_LEVEL_INVERSE + 2
 
 	NoiseLayer *grid = new NoiseLayer(dim,dim,false);
 	
@@ -17,14 +17,17 @@ int main() {
 		
 		layer->interpolate(dim,dim);
 		
-		layer->scale(1.0/(float)weight);
+		layer->scale(1.1/(float)weight);
 		
 		grid->addOn(layer);
 	
 	}
 	
-	grid->addRiver();
-
+	//grid->addRiver();
+	//grid->printStats();
+	grid->modulateEllipse();
+	//grid->printStats();
+	//grid->printHTMLTable();
 	grid->print();
 	delete grid;
 

@@ -51,6 +51,8 @@ int NoiseLayer::getWidth() const {
 }
 
 void NoiseLayer::print() {
+
+	std::cout << this->height << "," << this->width << std::endl;
 	
 	for(int i = 0; i < this->height; ++i) {
 		
@@ -73,6 +75,45 @@ void NoiseLayer::print() {
 	
 }
 
+void NoiseLayer::printStats() {
+
+	std::cout << "Height: " << this->height << std::endl << "Width: " << this->width << std::endl;
+
+	int *stats = new int[100];
+	int counted = 0;
+
+	for(int i = 0; i < 100; i++) {
+
+		stats[i] = 0;
+
+	}
+
+	for(int i = 0; i < this->height; ++i) {
+		
+		for(int j = 0; j < this->width; ++j) {
+
+			if(this->layer[i][j] >= 0 && this->layer[i][j] < 100) {
+
+				stats[(int)this->layer[i][j]]++;
+				counted++;
+
+			}
+	
+		}
+
+	}	
+
+	std::cout << "tiles in range [0-100): " << counted << std::endl;
+
+	for(int i = 0; i < 100; i++) {
+
+		std::cout << i << ": " << stats[i] << std::endl;
+	}
+
+	delete [] stats;
+
+}
+
 void NoiseLayer::printHTMLTable() {
 	
 	static bool first = true;
@@ -89,8 +130,9 @@ void NoiseLayer::printHTMLTable() {
 		std::cout << "<tr>";
 		
 		for(int j = 0; j < this->width; ++j) {
-			
-			std::cout << "<td style=\"background-color:rgb(" << (int)(this->layer[i][j]*2.55) << "," << (int)(this->layer[i][j]*2.55) << "," << (int)(this->layer[i][j]*2.55) << ");\"></td>";
+
+			if(this->layer[i][j] <= 35) std::cout << "<td style=\"background-color:rgb(10,40,200);\"></td>";
+			else std::cout << "<td style=\"background-color:rgb(" << (int)(this->layer[i][j]*4)-35 << ",255," << (int)(this->layer[i][j]*4)-35 << ");\"></td>";
 			
 		}
 		
@@ -130,6 +172,8 @@ void NoiseLayer::scale(float factor) {
 		for(int j = 0; j < this->width; ++j) {
 			
 			this->layer[i][j] = (int)((float)this->layer[i][j] * factor);
+			if(this->layer[i][j] <= 0) this->layer[i][j] = 0;
+			else if(this->layer[i][j] >= 100) this->layer[i][j] = 99.9;
 			
 		}
 		
@@ -340,23 +384,20 @@ void NoiseLayer::addRiver() {
 }
 
 
+void NoiseLayer::modulateEllipse() {
 
+	Vector foci1 = Vector(this->height/2,this->width/3);
+	Vector foci2 = Vector(this->height/2,2*this->width/3);
 
+	for(int i = 0; i < this->height; ++i) {		
+		
+		for(int j = 0; j < this->width; ++j) {
 
+			this->layer[i][j] -= (((sqrt((abs(foci1.getX()-i)*abs(foci1.getX()-i))+(abs(foci1.getY()-j)*abs(foci1.getY()-j))) + sqrt((abs(foci2.getX()-i)*abs(foci2.getX()-i))+(abs(foci2.getY()-j)*abs(foci2.getY()-j)))) / this->width) * 80) - 25;
+			if(this->layer[i][j] <= 0) this->layer[i][j] = 0;
 
+		}
 
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
